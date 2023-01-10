@@ -10,11 +10,13 @@ import torch
 
 # -----------------------------------------------------------------------------
 
+
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
+
 
 def setup_logging(config):
     """ monotonous bookkeeping """
@@ -27,6 +29,7 @@ def setup_logging(config):
     # log the config itself
     with open(os.path.join(work_dir, 'config.json'), 'w') as f:
         f.write(json.dumps(config.to_dict(), indent=4))
+
 
 class CfgNode:
     """ a lightweight configuration class inspired by yacs """
@@ -54,7 +57,7 @@ class CfgNode:
 
     def to_dict(self):
         """ return a dict representation of the config """
-        return { k: v.to_dict() if isinstance(v, CfgNode) else v for k, v in self.__dict__.items() }
+        return {k: v.to_dict() if isinstance(v, CfgNode) else v for k, v in self.__dict__.items()}
 
     def merge_from_dict(self, d):
         self.__dict__.update(d)
@@ -73,7 +76,7 @@ class CfgNode:
 
             keyval = arg.split('=')
             assert len(keyval) == 2, "expecting each override arg to be of form --arg=value, got %s" % arg
-            key, val = keyval # unpack
+            key, val = keyval  # unpack
 
             # first translate val into a python object
             try:
@@ -88,7 +91,7 @@ class CfgNode:
 
             # find the appropriate object to insert the attribute into
             assert key[:2] == '--'
-            key = key[2:] # strip the '--'
+            key = key[2:]  # strip the '--'
             keys = key.split('.')
             obj = self
             for k in keys[:-1]:
